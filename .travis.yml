@@ -14,4 +14,4 @@ after_script:
 
 stage: test
   script:
-    - docker run vuda/gateway go build --mod=vendor -o app-exe . -- --coverage
+    - docker run vuda/gateway -- --coverage
