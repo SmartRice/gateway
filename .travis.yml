@@ -2,9 +2,5 @@ sudo: required
 services:
   - docker
 
-before_install:
-  - echo "ProjectName $CI_PROJECT_NAME"
-
-  
 script:
   - docker run smartrice/gateway go build --mod=vendor -o app-exe . -- --coverage
