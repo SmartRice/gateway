@@ -3,7 +3,7 @@ services:
   - docker
 
 before_install:
-  - echo "ProjectName   $CI_PROJECT_NAME"
+  - echo "ProjectName $CI_PROJECT_NAME"
 
 script:
   - docker run smartRice/gateway go build --mod=vendor -o app-exe . -- --coverage
