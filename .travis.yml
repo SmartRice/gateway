@@ -9,6 +9,8 @@ stage: build docker image
   - docker images
   - docker tag gateway $DOCKER_USERNAME/gateway
   - docker push $DOCKER_USERNAME/gateway
+after_script:
+    - docker logout $DOCKER_HOST
 
 stage: test
   script:
