@@ -2,5 +2,14 @@ sudo: required
 services:
   - docker
 
-script:
-  - docker run vuda/gateway go build --mod=vendor -o app-exe . -- --coverage
+stage: build docker image
+  script:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t gateway .
+  - docker images
+  - docker tag gateway $DOCKER_USERNAME/gateway
+  - docker push $DOCKER_USERNAME/gateway
+
+stage: test
+  script:
+    - docker run vuda/gateway go build --mod=vendor -o app-exe . -- --coverage
