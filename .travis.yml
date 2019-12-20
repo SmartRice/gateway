@@ -12,6 +12,7 @@ stage: build docker image
 after_script:
     - docker logout $DOCKER_HOST
 
+
 stage: test
   script:
     - docker run vuda/gateway -- --coverage
