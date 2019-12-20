@@ -6,4 +6,4 @@ before_install:
   - echo "ProjectName   $CI_PROJECT_NAME"
 
 script:
-  - docker run duongvu089x/smart-life-gateway go build --mod=vendor -o app-exe . -- --coverage
+  - docker run smartRice/gateway go build --mod=vendor -o app-exe . -- --coverage
