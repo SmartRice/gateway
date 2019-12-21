@@ -1,17 +1,17 @@
 sudo: required
 services:
   - docker
-
-stage: build docker image
-  script:
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker build -t gateway .
-  - docker images
-  - docker tag gateway $DOCKER_USERNAME/gateway
-  - docker push $DOCKER_USERNAME/gateway
-  after_script:
-  - docker logout $DOCKER_HOST
-
-stage: test
-  script:
-  - docker run vuda/gateway -- --coverage
+jobs:
+  include:
+    - stage: build docker image
+      script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build -t gateway .
+      - docker images
+      - docker tag gateway $DOCKER_USERNAME/gateway
+      - docker push $DOCKER_USERNAME/gateway
+      after_script:
+      - docker logout $DOCKER_HOST
+    - stage: test
+      script:
+      - docker run vuda/gateway -- --coverage
