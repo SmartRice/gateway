@@ -4,6 +4,8 @@ services:
 jobs:
   include:
     - stage: build docker image
+      before_script:
+      - docker logout $DOCKER_HOST
       script:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - docker build -t gateway .
