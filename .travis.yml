@@ -5,7 +5,7 @@ jobs:
   include:
     - stage: build docker image
       script:
-      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin --privileged
       - docker build -t gateway .
       - docker images
       - docker tag gateway $DOCKER_USERNAME/gateway
