@@ -10,8 +10,13 @@ jobs:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - docker build -t gateway-test -f Dockerfile.dev .
       - docker run gateway-test
+      after_script:
+      - docker logout $DOCKER_HOST_URL
     - stage: build
+      before_script:
+      - docker logout $DOCKER_HOST_URL
       script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - docker build -t gateway .
       - docker images
       - docker tag gateway $DOCKER_USERNAME/gateway
