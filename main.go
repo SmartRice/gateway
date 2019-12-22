@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 )
+
 type App struct {
 	Name       string
 	ServerList []model.APIServer
@@ -104,4 +105,3 @@ func main() {
 
 	app.Launch()
 }
-

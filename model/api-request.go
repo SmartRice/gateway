@@ -20,7 +20,6 @@ type APIRequest interface {
 	SetAttribute(string, interface{})
 }
 
-
 // HTTPAPIRequest This is response object with JSON format
 type HTTPAPIRequest struct {
 	t       string
@@ -51,7 +50,8 @@ func (req *HTTPAPIRequest) GetHeaders() map[string]string {
 	for key := range vals {
 		m[key] = vals.Get(key)
 	}
-	return m}
+	return m
+}
 
 func (req *HTTPAPIRequest) GetContent(data interface{}) error {
 	return json.Unmarshal([]byte(req.GetContentText()), data)
@@ -67,7 +67,8 @@ func (req *HTTPAPIRequest) GetContentText() string {
 		req.body = string(bodyBytes)
 	}
 
-	return req.body}
+	return req.body
+}
 
 func (req *HTTPAPIRequest) GetAttribute(name string) interface{} {
 	return req.context.Get(name)
@@ -87,7 +88,6 @@ func newHTTPAPIRequest(e echo.Context) APIRequest {
 func (req *HTTPAPIRequest) GetPath() string {
 	return req.context.Path()
 }
-
 
 func (req *HTTPAPIRequest) GetMethod() *MethodValue {
 	var s = req.context.Request().Method
