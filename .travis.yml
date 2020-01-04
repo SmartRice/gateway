@@ -18,12 +18,6 @@ jobs:
       after_script:
         - docker logout $DOCKER_HOST_URL
     - stage: build
-      before_install:
-        - openssl aes-256-cbc -K $encrypted_0c35eebf403c_key -iv $encrypted_0c35eebf403c_iv -in service-account.json.enc -out service-account.json -d
-        - curl https://sdk.cloud.google.com | bash > /dev/null;
-        - source $HOME/google-cloud-sdk/path.bash.inc
-        - gcloud components update kubectl
-        - gcloud auth activate-service-account --key-file service-account.json
       before_script:
         - docker logout $DOCKER_HOST_URL
       script:
@@ -34,11 +28,20 @@ jobs:
         - docker push $DOCKER_USERNAME/gateway
       after_script:
         - docker logout $DOCKER_HOST_URL
-    # - stage: deploy
-    #   before_script:
-    #     - docker logout $DOCKER_HOST_URL
-    #   script: bash ./deploy.sh
-    #   after_script:
-    #     - docker logout $DOCKER_HOST_URL
-    #   on:
-    #     branch: master
+    - stage: deploy
+      before_install:
+        - openssl aes-256-cbc -K $encrypted_0c35eebf403c_key -iv $encrypted_0c35eebf403c_iv -in service-account.json.enc -out service-account.json -d
+        - curl https://sdk.cloud.google.com | bash > /dev/null;
+        - source $HOME/google-cloud-sdk/path.bash.inc
+        - gcloud components update kubectl
+        - gcloud auth activate-service-account --key-file service-account.json
+        - gcloud config set project smartlife-264017
+        - gcloud config set compute/zone asia-southeast1-b
+        - gcloud container clusters get-credentials smart-life
+      # before_script:
+      #   - docker logout $DOCKER_HOST_URL
+      # script: bash ./deploy.sh
+      # after_script:
+      #   - docker logout $DOCKER_HOST_URL
+      on:
+        branch: master
