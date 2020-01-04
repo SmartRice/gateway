@@ -1,25 +1,45 @@
 sudo: required
 services:
   - docker
+
+env:
+  global:
+    - SHA=$(git rev-parse HEAD)
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_0c35eebf403c_key -iv $encrypted_0c35eebf403c_iv -in service-account.json.enc -out service-account.json -d
+  - curl https://sdk.cloud.google.com | bash > /dev/null;
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  - gcloud components update kubectl
+  - gcloud auth activate-service-account --key-file service-account.json
+
 jobs:
   include:
     - stage: test
       before_script:
-      - docker logout $DOCKER_HOST_URL
+        - docker logout $DOCKER_HOST_URL
       script:
-      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker build -t gateway-test -f Dockerfile.dev .
-      - docker run gateway-test
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker build -t gateway-test -f Dockerfile.dev .
+        - docker run gateway-test
       after_script:
-      - docker logout $DOCKER_HOST_URL
+        - docker logout $DOCKER_HOST_URL
     - stage: build
       before_script:
-      - docker logout $DOCKER_HOST_URL
+        - docker logout $DOCKER_HOST_URL
       script:
-      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker build -t gateway .
-      - docker images
-      - docker tag gateway $DOCKER_USERNAME/gateway
-      - docker push $DOCKER_USERNAME/gateway
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker build -t gateway .
+        - docker images
+        - docker tag gateway $DOCKER_USERNAME/gateway
+        - docker push $DOCKER_USERNAME/gateway
       after_script:
-      - docker logout $DOCKER_HOST_URL
+        - docker logout $DOCKER_HOST_URL
+    # - stage: deploy
+    #   before_script:
+    #     - docker logout $DOCKER_HOST_URL
+    #   script: bash ./deploy.sh
+    #   after_script:
+    #     - docker logout $DOCKER_HOST_URL
+    #   on:
+    #     branch: master
