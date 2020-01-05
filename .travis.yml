@@ -4,7 +4,7 @@ services:
 
 env:
   global:
-    # - SHA=$(git rev-parse HEAD)
+    - SHA=$(git rev-parse HEAD)
     - CLOUDSDK_CORE_DISABLE_PROMPTS=1
 
 jobs:
@@ -23,10 +23,10 @@ jobs:
         - docker logout $DOCKER_HOST_URL
       script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - docker build -t gateway .
-        - docker images
-        - docker tag gateway $DOCKER_USERNAME/gateway
-        - docker push $DOCKER_USERNAME/gateway
+        - docker build -t $DOCKER_USERNAME/gateway:latest -t $DOCKER_USERNAME/gateway:$SHA .
+        # - docker tag gateway $DOCKER_USERNAME/gateway:latest
+        - docker push $DOCKER_USERNAME/gateway:latest
+        - docker push $DOCKER_USERNAME/gateway:$SHA
       after_script:
         - docker logout $DOCKER_HOST_URL
     - stage: deploy
@@ -39,6 +39,8 @@ jobs:
         - gcloud config set project smartlife-264017
         - gcloud config set compute/zone asia-southeast1-b
         - gcloud container clusters get-credentials smart-life
+      provider: script
+      script: bash ./deploy.sh
       # before_script:
       #   - docker logout $DOCKER_HOST_URL
       # script: bash ./deploy.sh
