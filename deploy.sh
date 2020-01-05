@@ -1,2 +1,2 @@
-kubectl set image gateway-deployment server=duongvu089x/gateway:$SHA
+kubectl set image gateway-deployment server=duongvu089x/gateway:$SHA --all
 
