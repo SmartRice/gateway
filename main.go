@@ -101,6 +101,18 @@ func main() {
 	//var newID = len(app.ServerList) + 1
 	var app = NewApp("Inside API Gateway")
 	var server, _ = app.SetupAPIServer("HTTP")
+
+	// ============= health check ==========================//
+	now := time.Now()
+	server.SetHandler(model.APIMethod.GET, "/pms/v1/health-check", func(req model.APIRequest, res model.APIResponder) error {
+		info := map[string]interface{}{}
+		info["serviceName"] = app.Name
+		info["startTime"] = now
+		info["status"] = "OK"
+
+		return res.Respond(&model.APIResponse{Status: model.APIStatus.Ok, Message: "OK", Data: []interface{}{info}})
+	})
+
 	server.Expose(80)
 
 	app.Launch()
