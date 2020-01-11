@@ -17,10 +17,6 @@ spec:
     - host: k8s-multi.com
       http:
         paths:
-          # - path: /?(.*)
-          #   backend:
-          #     serviceName: client-cluster-ip-service
-          #     servicePort: 3000
           - path: /api/?(.*)
             backend:
               serviceName: gateway-cluster-ip-service
@@ -28,10 +24,6 @@ spec:
     - host: www.k8s-multi.com
       http:
         paths:
-          # - path: /?(.*)
-          #   backend:
-          #     serviceName: client-cluster-ip-service
-          #     servicePort: 3000
           - path: /api/?(.*)
             backend:
               serviceName: gateway-cluster-ip-service
